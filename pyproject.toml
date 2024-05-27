@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "reggui"
+version = "0.1.0"
+description = "Flet-based GUI for Reggie D. Bot"
+authors = ["Flavio Codeço Coelho <fccoelho@gmail.com>"]
+license = "GPL-v3"
+readme = "README.md"
+
+[tool.poetry.scripts]
+reggui = "reggui.main:run"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flet = "*"
+sqlmodel = "^0.0.18"
+reg-d-bot = {git = "https://github.com/Deeplearn-PeD/reg"}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
