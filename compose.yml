@@ -1,0 +1,24 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8060:8060"
+    depends_on:
+      - db
+    environment:
+      - PGURL=postgresql://postgres:eueueu@db:5434/regdbot
+  db:
+    image: postgres:latest
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=eueueu
+      - POSTGRES_DB=regdbot
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ./Docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+volumes:
+  postgres_data:

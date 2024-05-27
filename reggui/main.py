@@ -1,4 +1,6 @@
+import asyncio
 import flet as ft
+
 
 def build_navigation_bar(page: ft.Page):
     page.nav_bar = ft.NavigationBar(
@@ -121,6 +123,17 @@ def main(page: ft.Page):
 
 def run():
     ft.app(target=main)
+
+def run_web():
+    try:
+        # Try to get the existing event loop
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        # If there's no existing event loop, create a new one
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+
+    loop.run_until_complete(ft.app(target=main, export_asgi_app=True))
 
 
 if __name__ == "__main__":
