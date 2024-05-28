@@ -1,0 +1,22 @@
+from regdbot.brain import RegDBot
+from regdbot.brain.utils import extract_code_from_markdown
+
+class Reggie:
+    def __init__(self, model='gpt', language: str = "en_US"):
+        self.bot = RegDBot(model=model)
+        self.bot.set_language(language)
+        self.bot.ask(self.bot.context, None)
+        # self.bot.set_context()
+
+    def say(self, text):
+        self.bot.say(text)
+
+    def ask(self, question: str, table: str) -> str:
+        """
+        Ask Reggie a question.
+        :param question: any textual prompt
+        :param table: the table name
+        :return:
+        """
+        resp = self.bot.ask(question, table)
+        return resp#, self.bot.last_response
