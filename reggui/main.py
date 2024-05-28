@@ -46,7 +46,7 @@ def build_app_bar(page: ft.Page):
         ],
     )
     return appbar
-def main(page: ft.Page):
+async def main(page: ft.Page):
     page.title = "Reg D. Bot"
     page.theme = ft.Theme(color_scheme_seed="green")
     page.appbar = build_app_bar(page)
@@ -122,18 +122,15 @@ def main(page: ft.Page):
 
 
 def run():
-    ft.app(target=main)
+    ft.app(
+        target=main,
+        export_asgi_app=True,
+        assets_dir="assets",
+
+    )
 
 def run_web():
-    try:
-        # Try to get the existing event loop
-        loop = asyncio.get_running_loop()
-    except RuntimeError:
-        # If there's no existing event loop, create a new one
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-
-    loop.run_until_complete(ft.app(target=main, export_asgi_app=True))
+    ft.app(target=main, export_asgi_app=True)
 
 
 if __name__ == "__main__":
