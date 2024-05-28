@@ -73,7 +73,7 @@ async def main(page: ft.Page):
         code_style=ft.TextStyle(font_family="Roboto Mono")
     )
     page.user_input = ft.TextField(label="Type your message here...", on_submit=handle_submit)
-    def route_change(route):
+    async def route_change(route):
         # print(route)
         page.views.clear()
         page.views.append(
@@ -121,16 +121,15 @@ async def main(page: ft.Page):
     page.go(page.route)
 
 
-def run():
+def run_web():
     ft.app(
         target=main,
         export_asgi_app=True,
         assets_dir="assets",
-
     )
 
-def run_web():
-    ft.app(target=main, export_asgi_app=True)
+def run():
+    ft.app(target=main)
 
 
 if __name__ == "__main__":

@@ -1,3 +1,9 @@
 {
-  "short_name": "Reg D. Bot"
+  "name": "Reg D. Bot",
+  "short_name": "Reg D. Bot",
+  "start_url": "/",
+    "display": "standalone",
+    "background_color": "#000000",
+  "description": "A bot that helps you interact with databases using natural language.",
+  "icons": []
 }
