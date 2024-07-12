@@ -1,5 +1,6 @@
 services:
   app:
+    env_file: ".env"
     build:
       context: .
       dockerfile: Dockerfile
@@ -8,7 +9,7 @@ services:
     depends_on:
       - db
     environment:
-      - PGURL=postgresql://postgres:eueueu@db:5434/regdbot
+      - PGURL=postgresql://postgres:eueueu@db:5432/regdbot
   db:
     image: postgres:latest
     ports:

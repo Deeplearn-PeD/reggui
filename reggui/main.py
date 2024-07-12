@@ -1,5 +1,5 @@
 import flet as ft
-from workflow import Reggie
+from reggui.workflow import Reggie
 import dotenv
 import os
 
@@ -82,6 +82,7 @@ def build_settings_page(page: ft.Page):
                                 options=[
                                     ft.dropdown.Option(text="regdbot", key=os.environ.get("PGURL")),
                                     ft.dropdown.Option(text="netflix_titles", key=os.environ.get("DUCKURL")),
+                                    ft.dropdown.Option(text="Open Access Journals", key=os.environ.get("DUCKURL2")),
                                 ],
                                 on_change=lambda event: page.client_storage.set("dburl", event.control.value)
                             ),
@@ -94,33 +95,37 @@ def build_settings_page(page: ft.Page):
     return page.settings_form
 
 
+async def start_reg(page):
+    page.RDB = Reggie(model="gpt")
+
+
 async def main(page: ft.Page):
     page.title = "Reg D. Bot"
     page.theme = ft.Theme(color_scheme_seed="green")
     page.appbar = build_app_bar(page)
-    page.prog_ring = ft.ProgressRing(value=0, visible=False)
+    page.prog_ring = ft.ProgressRing(value=None, visible=False)
     build_navigation_bar(page)
     page.update()
-    page.RDB = Reggie(model="llama3")
+    await start_reg(page)
 
     def handle_submit(event):
         page.prog_ring.visible = True
         user_message = page.user_input.value
         page.chat_history.value += f"User: {user_message}\n\n"
         page.user_input.value = ""
-        page.prog_ring.value = 25
+        page.prog_ring.value = None
         page.update()
         # Simulate AI response by echoing the user's message
         response = page.RDB.ask(user_message, page.client_storage.get("table"))
         page.prog_ring.value = 100
-        ai_response = f"***Reg:** {response}\n\n"
+        ai_response = f"***Reg:*** {response}\n\n"
         page.chat_history.value += ai_response
         page.prog_ring.visible = False
 
         page.update()
 
     page.chat_history = ft.Markdown(
-        value="# Chat History\n\nHi! I am Reggie D. Bot, your friendly database AI expert. How can I help you today?\n\n",
+        value="Hi! I am *Reggie D. Bot*, your friendly database AI expert. How can I help you today?\n\n",
         selectable=True,
         expand=False,
         extension_set="gitHubWeb",
@@ -132,13 +137,31 @@ async def main(page: ft.Page):
                                    expand=True
                                    )
 
+    mugshot = ft.Card(
+        content=ft.Column(
+            [
+                ft.Image(src="/images/reggie.png", width=200, height=200, fit=ft.ImageFit.CONTAIN),
+                ft.Text("Reggie D. Bot", size=20, weight=ft.FontWeight.BOLD),
+                ft.Text("Database AI Expert", size=16, weight=ft.FontWeight.NORMAL),
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            spacing=20
+        ),
+        )
+
+
     def validate_source(e):
         page.appbar.actions[0].value = page.client_storage.get("dburl")
         page.RDB.bot.load_database(page.client_storage.get("dburl"))
         page.appbar.actions[1].options = [ft.dropdown.Option(text=tbl, key=tbl) for tbl in
                                           page.RDB.bot.active_db.tables]
+        if page.RDB.bot.active_db.tables:
+            page.client_storage.set("table", page.RDB.bot.active_db.tables[0])
+        else:
+            page.client_storage.set("table", "")
         page.chat_history.value += f"***Reg:*** Database loaded: {page.client_storage.get('dburl')}\n\n"
-        page.chat_history.value += f"***Reg:*** These are the tables available in this database: {page.RDB.bot.active_db.tables}\n\n"
+        tlist = '\n'.join([f"- {t}\n" for t in page.RDB.bot.active_db.tables])
+        page.chat_history.value += f"***Reg:*** These are the tables available in this database: \n{tlist}\n\n"
         page.chat_history.value += f"***Reg:*** Why don't you select one of these in the pull down menu above so we can explore it together?\n\n"
         page.go("/home")
         page.update()
@@ -153,6 +176,7 @@ async def main(page: ft.Page):
                     page.appbar,
                     ft.Column(
                         [
+                            mugshot,
                             page.chat_history,
                             ft.Row([page.user_input, page.prog_ring])
                         ],
@@ -205,8 +229,8 @@ async def main(page: ft.Page):
     page.go(page.route)
 
 
-def run_web():
-    ft.app(
+# def run_web():
+app = ft.app(
         target=main,
         export_asgi_app=True,
         assets_dir="assets",
@@ -218,4 +242,5 @@ def run():
 
 
 if __name__ == "__main__":
+    pass
     run()

@@ -18,5 +18,11 @@ class Reggie:
         :param table: the table name
         :return:
         """
-        resp = self.bot.ask(question, table)
+        try:
+            resp = self.bot.ask(question, table)
+        except KeyError:
+            if table:
+                resp =  f"Table *{table}* not found in the database. Please try again."
+            else:
+                resp = "No table specified. Please try again."
         return resp#, self.bot.last_response
