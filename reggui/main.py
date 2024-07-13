@@ -81,8 +81,10 @@ def build_settings_page(page: ft.Page):
         page.client_storage.set("dburl", event.control.value)
         page.appbar.actions[1].options = [ft.dropdown.Option(text=tbl, key=tbl) for tbl in
                                           page.RDB.bot.active_db.tables]
+
         if page.RDB.bot.active_db.tables:
             page.client_storage.set("table", page.RDB.bot.active_db.tables[0])
+            page.appbar.actions[1].value = page.client_storage.get("table")
         else:
             page.client_storage.set("table", "")
         page.update()
