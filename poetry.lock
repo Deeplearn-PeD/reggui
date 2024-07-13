@@ -2537,10 +2537,10 @@ test = ["coverage", "pytest"]
 
 [[package]]
 name = "reg-d-bot"
-version = "0.3.2"
+version = "0.4.3"
 description = "AI bot specialized in Database exploration"
 optional = false
-python-versions = "^3.11"
+python-versions = ">=3.11,<4.0"
 files = []
 develop = false
 
@@ -2562,12 +2562,13 @@ python-dotenv = "^1.0.1"
 seaborn = "^0.13.2"
 SQLAlchemy = "^2.0.29"
 sqlparse = "^0.5.0"
+tabulate = "^0.9.0"
 
 [package.source]
 type = "git"
 url = "https://github.com/Deeplearn-PeD/reg"
 reference = "HEAD"
-resolved_reference = "293082579622d0a6e1da71c01f79b15686cf807c"
+resolved_reference = "5ef2bb0dfb426d1f9a8cb1bf70e681d859019423"
 
 [[package]]
 name = "repath"
@@ -2809,6 +2810,20 @@ anyio = ">=3.4.0,<5"
 
 [package.extras]
 full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.7)", "pyyaml"]
+
+[[package]]
+name = "tabulate"
+version = "0.9.0"
+description = "Pretty-print tabular data"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "tabulate-0.9.0-py3-none-any.whl", hash = "sha256:024ca478df22e9340661486f85298cff5f6dcdba14f3813e8830015b9ed1948f"},
+    {file = "tabulate-0.9.0.tar.gz", hash = "sha256:0095b12bf5966de529c0feb1fa08671671b3368eec77d7ef7ab114be2c068b3c"},
+]
+
+[package.extras]
+widechars = ["wcwidth"]
 
 [[package]]
 name = "tenacity"

@@ -1,7 +1,10 @@
-import flet as ft
-from reggui.workflow import Reggie
-import dotenv
 import os
+
+import dotenv
+import flet as ft
+
+from reggui.eda import build_eda_panel
+from reggui.workflow import Reggie
 
 dotenv.load_dotenv()
 
@@ -38,20 +41,22 @@ def build_app_bar(page: ft.Page):
         actions=[
             ft.TextField(
                 label="Source URL",
-                width=300,
+                width=350,
                 value="",
+                expand=True,
                 read_only=True,
             ),
             ft.Dropdown(
                 value='',
-                width=200,
+                width=300,
                 label="Tables",
                 tooltip="Select a dataset",
                 options=[],
+                expand=True,
                 on_change=lambda event: set_table(event)
             ),
             ft.Dropdown(
-                value='English',
+                value='en_US',
                 width=200,
                 label="Language",
                 tooltip="Select a language",
@@ -70,6 +75,18 @@ def build_app_bar(page: ft.Page):
 
 
 def build_settings_page(page: ft.Page):
+    def on_dataset_selection(event):
+        page.appbar.actions[0].value = page.client_storage.get("dburl")
+        page.RDB.bot.load_database(page.client_storage.get("dburl"))
+        page.client_storage.set("dburl", event.control.value)
+        page.appbar.actions[1].options = [ft.dropdown.Option(text=tbl, key=tbl) for tbl in
+                                          page.RDB.bot.active_db.tables]
+        if page.RDB.bot.active_db.tables:
+            page.client_storage.set("table", page.RDB.bot.active_db.tables[0])
+        else:
+            page.client_storage.set("table", "")
+        page.update()
+
     page.settings_form = ft.Column(
         [
             ft.Row(
@@ -84,11 +101,12 @@ def build_settings_page(page: ft.Page):
                                     ft.dropdown.Option(text="netflix_titles", key=os.environ.get("DUCKURL")),
                                     ft.dropdown.Option(text="Open Access Journals", key=os.environ.get("DUCKURL2")),
                                 ],
-                                on_change=lambda event: page.client_storage.set("dburl", event.control.value)
+                                on_change=on_dataset_selection
                             ),
                         ],
                         expand=True
                     ),
+                    build_eda_panel(page)
                 ]
             )]
     )
@@ -138,27 +156,21 @@ async def main(page: ft.Page):
                                    )
 
     mugshot = ft.Card(
-        content=ft.Column(
-            [
-                ft.Image(src="/images/reggie.png", width=200, height=200, fit=ft.ImageFit.CONTAIN),
-                ft.Text("Reggie D. Bot", size=20, weight=ft.FontWeight.BOLD),
-                ft.Text("Database AI Expert", size=16, weight=ft.FontWeight.NORMAL),
-            ],
-            alignment=ft.MainAxisAlignment.CENTER,
-            spacing=20
-        ),
+        content=ft.Container(
+            content=ft.Column(
+                [
+                    ft.Image(src="/images/reggie.png", width=200, height=200, fit=ft.ImageFit.CONTAIN),
+                    ft.Text("Reggie D. Bot", size=20, weight=ft.FontWeight.BOLD),
+                    ft.Text("Database AI Expert", size=16, weight=ft.FontWeight.NORMAL),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+                spacing=20
+            ),
+            margin=10,
         )
-
+    )
 
     def validate_source(e):
-        page.appbar.actions[0].value = page.client_storage.get("dburl")
-        page.RDB.bot.load_database(page.client_storage.get("dburl"))
-        page.appbar.actions[1].options = [ft.dropdown.Option(text=tbl, key=tbl) for tbl in
-                                          page.RDB.bot.active_db.tables]
-        if page.RDB.bot.active_db.tables:
-            page.client_storage.set("table", page.RDB.bot.active_db.tables[0])
-        else:
-            page.client_storage.set("table", "")
         page.chat_history.value += f"***Reg:*** Database loaded: {page.client_storage.get('dburl')}\n\n"
         tlist = '\n'.join([f"- {t}\n" for t in page.RDB.bot.active_db.tables])
         page.chat_history.value += f"***Reg:*** These are the tables available in this database: \n{tlist}\n\n"
@@ -231,14 +243,14 @@ async def main(page: ft.Page):
 
 # def run_web():
 app = ft.app(
-        target=main,
-        export_asgi_app=True,
-        assets_dir="assets",
-    )
+    target=main,
+    export_asgi_app=True,
+    assets_dir="assets",
+)
 
 
 def run():
-    ft.app(target=main)
+    ft.app(target=main, assets_dir="assets")
 
 
 if __name__ == "__main__":
