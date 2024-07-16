@@ -75,9 +75,11 @@ def build_app_bar(page: ft.Page):
 
 def build_settings_page(page: ft.Page):
     def on_dataset_selection(event):
+        page.client_storage.remove("dburl")
+        page.client_storage.remove("table")
+        page.client_storage.set("dburl", event.control.value)
         page.appbar.actions[0].value = page.client_storage.get("dburl")
         page.RDB.bot.load_database(page.client_storage.get("dburl"))
-        page.client_storage.set("dburl", event.control.value)
         page.appbar.actions[1].options = [ft.dropdown.Option(text=tbl, key=tbl) for tbl in
                                           page.RDB.bot.active_db.tables]
 
@@ -176,7 +178,7 @@ async def main(page: ft.Page):
                 alignment=ft.MainAxisAlignment.CENTER,
                 spacing=20
             ),
-            margin=10,
+            padding=10,
         )
     )
 
