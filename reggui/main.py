@@ -2,9 +2,8 @@ import os
 
 import dotenv
 import flet as ft
-
-from reggui.eda import build_eda_panel
 from reggui.workflow import Reggie
+from reggui.eda import build_eda_panel
 
 dotenv.load_dotenv()
 
@@ -85,31 +84,40 @@ def build_settings_page(page: ft.Page):
         if page.RDB.bot.active_db.tables:
             page.client_storage.set("table", page.RDB.bot.active_db.tables[0])
             page.appbar.actions[1].value = page.client_storage.get("table")
+            page.eda_results.value = ""
+            page.plot_corr_button.disabled = True
+            page.show_categorical_button.disabled = True
         else:
             page.client_storage.set("table", "")
         page.update()
 
     page.settings_form = ft.Column(
-        [
+        controls=[
             ft.Row(
                 controls=[
-                    ft.Column(
-                        controls=[
-                            ft.Dropdown(
-                                label="Database",
-                                value="postgresql://",
-                                options=[
-                                    ft.dropdown.Option(text="regdbot", key=os.environ.get("PGURL")),
-                                    ft.dropdown.Option(text="netflix_titles", key=os.environ.get("DUCKURL")),
-                                    ft.dropdown.Option(text="Open Access Journals", key=os.environ.get("DUCKURL2")),
-                                ],
-                                on_change=on_dataset_selection
-                            ),
-                        ],
-                        expand=True
+                    ft.Container(
+                        padding=20,
+                        content=ft.Column(
+                            controls=[
+                                ft.Text("Data Source Configuration", size=28, weight=ft.FontWeight.BOLD),
+                                ft.Dropdown(
+                                    label="Database",
+                                    value="postgresql://",
+                                    options=[
+                                        ft.dropdown.Option(text="regdbot", key=os.environ.get("PGURL")),
+                                        ft.dropdown.Option(text="netflix_titles", key=os.environ.get("DUCKURL")),
+                                        ft.dropdown.Option(text="Open Access Journals", key=os.environ.get("DUCKURL2")),
+                                    ],
+                                    on_change=on_dataset_selection
+                                ),
+                            ],
+                            # expand=True,
+                            # alignment=ft.MainAxisAlignment.START
+                        )
                     ),
                     build_eda_panel(page)
-                ]
+                ],
+                # expand=True
             )]
     )
     return page.settings_form
@@ -209,7 +217,6 @@ async def main(page: ft.Page):
                     "/settings",
                     [
                         page.appbar,
-                        ft.Text("Data Source Configuration", size=30, weight=ft.FontWeight.BOLD),
                         build_settings_page(page),
                         ft.ElevatedButton(text="Test connection", icon=ft.icons.POWER, on_click=validate_source),
                         page.nav_bar
