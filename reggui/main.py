@@ -125,6 +125,38 @@ def build_settings_page(page: ft.Page):
     return page.settings_form
 
 
+def build_about_page(page):
+    about_page = ft.Container(
+        content=ft.ResponsiveRow(
+            controls=[
+                ft.Column(
+                    col=6,
+                    controls=[ft.Markdown("""
+# About Reggie D. Bot
+            
+Reggie D. Bot is a database AI expert that can help you explore your data. 
+                    
+He is powered by the RegDBot library, which is a Python package that provides a 
+natural language interface to databases. 
+                    
+Reggie is built using the Flet web framework, which allows you to build web applications with Python. Reggie can help you with a wide 
+range of tasks, such as querying databases, generating reports, and even creating visualizations. 
+
+Reggie is designed by [Deeplearn](www.deeplearn.ltd) to be easy to use and flexible, so you can customize him to suit your needs. 
+ If you have any questions or feedback, please feel free to reach out to us. We're always happy to help!
+""",
+                                          extension_set=ft.MarkdownExtensionSet.GITHUB_WEB
+                                          )]),
+                ft.Column(col=6,
+                          controls=[
+                              ft.Image(src="/images/reggie.png", fit=ft.ImageFit.CONTAIN)
+                          ])]
+        ),
+        padding=20
+    )
+    return about_page
+
+
 async def start_reg(page):
     page.RDB = Reggie(model="gpt")
 
@@ -232,7 +264,7 @@ async def main(page: ft.Page):
                     "/about",
                     [
                         page.appbar,
-                        ft.Text("About page"),
+                        build_about_page(page),
                         page.nav_bar
                     ],
                     scroll=ft.ScrollMode.AUTO
