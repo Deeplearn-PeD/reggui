@@ -38,12 +38,10 @@ def build_app_bar(page: ft.Page):
         adaptive=True,
         toolbar_height=80,
         actions=[
-            ft.TextField(
-                label="Source URL",
+            ft.Text(
                 width=350,
-                value="",
+                value="Source URL",
                 expand=True,
-                read_only=True,
             ),
             ft.Dropdown(
                 value='',
@@ -52,6 +50,7 @@ def build_app_bar(page: ft.Page):
                 tooltip="Select a dataset",
                 options=[],
                 expand=True,
+                visible=False,
                 on_change=lambda event: set_table(event)
             ),
             ft.Dropdown(
@@ -78,14 +77,15 @@ def build_settings_page(page: ft.Page):
         page.client_storage.remove("dburl")
         page.client_storage.remove("table")
         page.client_storage.set("dburl", event.control.value)
-        page.appbar.actions[0].value = page.client_storage.get("dburl")
-        page.RDB.bot.load_database(page.client_storage.get("dburl"))
+        page.appbar.actions[0].value = event.control.value
+        page.RDB.bot.load_database(event.control.value)
         page.appbar.actions[1].options = [ft.dropdown.Option(text=tbl, key=tbl) for tbl in
                                           page.RDB.bot.active_db.tables]
 
         if page.RDB.bot.active_db.tables:
             page.client_storage.set("table", page.RDB.bot.active_db.tables[0])
             page.appbar.actions[1].value = page.client_storage.get("table")
+            page.appbar.actions[1].visible = True
             page.eda_results.value = ""
             page.plot_corr_button.disabled = True
             page.show_categorical_button.disabled = True
