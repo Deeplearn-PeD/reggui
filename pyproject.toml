@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "reggui"
-version = "0.3.2"
+version = "0.3.3"
 description = "Flet-based GUI for Reggie D. Bot"
 authors = ["Flavio Codeço Coelho <fccoelho@gmail.com>"]
 license = "GPL-v3"

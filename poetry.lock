@@ -1741,13 +1741,13 @@ httpx = ">=0.27.0,<0.28.0"
 
 [[package]]
 name = "openai"
-version = "1.35.14"
+version = "1.35.15"
 description = "The official Python library for the openai API"
 optional = false
 python-versions = ">=3.7.1"
 files = [
-    {file = "openai-1.35.14-py3-none-any.whl", hash = "sha256:adadf8c176e0b8c47ad782ed45dc20ef46438ee1f02c7103c4155cff79c8f68b"},
-    {file = "openai-1.35.14.tar.gz", hash = "sha256:394ba1dfd12ecec1d634c50e512d24ff1858bbc2674ffcce309b822785a058de"},
+    {file = "openai-1.35.15-py3-none-any.whl", hash = "sha256:1b9a6ada4239b91f38f51c426c6ee2746a2069c92cbf25ed8694e5ec00ff4597"},
+    {file = "openai-1.35.15.tar.gz", hash = "sha256:307007e2036d57115612c1ecb50e9bc98fcc93537109a9f9efa1b4eedb2ea968"},
 ]
 
 [package.dependencies]
@@ -2064,13 +2064,13 @@ files = [
 
 [[package]]
 name = "pyaml"
-version = "24.4.0"
+version = "24.7.0"
 description = "PyYAML-based module to produce a bit more pretty and readable YAML-serialized data"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pyaml-24.4.0-py3-none-any.whl", hash = "sha256:acc2b39c55cb0cbe4f694a6d3886f89ad3d2a5b3efcece526202f8de9a6b27de"},
-    {file = "pyaml-24.4.0.tar.gz", hash = "sha256:0e483d9289010e747a325dc43171bcc39d6562dd1dd4719e8cc7e7c96c99fce6"},
+    {file = "pyaml-24.7.0-py3-none-any.whl", hash = "sha256:6b06596cb5ac438a3fad1e1bf5775088c4d3afb927e2b03a29305d334835deb2"},
+    {file = "pyaml-24.7.0.tar.gz", hash = "sha256:5d0fdf9e681036fb263a783d0298fc3af580a6e2a6cf1a3314ffc48dc3d91ccb"},
 ]
 
 [package.dependencies]
@@ -2465,7 +2465,7 @@ test = ["coverage", "pytest"]
 
 [[package]]
 name = "reg-d-bot"
-version = "0.5.0"
+version = "0.5.1"
 description = "AI bot specialized in Database exploration"
 optional = false
 python-versions = ">=3.11,<4.0"
@@ -2496,7 +2496,7 @@ tabulate = "^0.9.0"
 type = "git"
 url = "https://github.com/Deeplearn-PeD/reg"
 reference = "HEAD"
-resolved_reference = "70c5a5935082c2f70996c9eef9205e5754e4ae0f"
+resolved_reference = "40561907fda3a8a4eb5e5dbffed5d9f82b124c3b"
 
 [[package]]
 name = "repath"

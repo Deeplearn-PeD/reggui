@@ -106,7 +106,7 @@ def build_settings_page(page: ft.Page):
                                     label="Database",
                                     value="postgresql://",
                                     options=[
-                                        ft.dropdown.Option(text="regdbot", key=os.environ.get("PGURL")),
+                                        # ft.dropdown.Option(text="regdbot", key=os.environ.get("PGURL")),
                                         ft.dropdown.Option(text="netflix_titles", key=os.environ.get("DUCKURL")),
                                         ft.dropdown.Option(text="Open Access Journals", key=os.environ.get("DUCKURL2")),
                                     ],
@@ -214,6 +214,14 @@ async def main(page: ft.Page):
         )
     )
 
+
+    def pick_files_result(e: ft.FilePickerResultEvent):
+        files = e.files
+
+    pick_files_dialog = ft.FilePicker(on_result=pick_files_result)
+
+    page.overlay.append(pick_files_dialog)
+
     def validate_source(e):
         page.chat_history.value += f"***Reg:*** Database loaded: {page.client_storage.get('dburl')}\n\n"
         tlist = '\n'.join([f"- {t}\n" for t in page.RDB.bot.active_db.tables])
@@ -252,7 +260,8 @@ async def main(page: ft.Page):
                     [
                         page.appbar,
                         build_settings_page(page),
-                        ft.ElevatedButton(text="Test connection", icon=ft.icons.POWER, on_click=validate_source),
+                        ft.Row([ft.ElevatedButton(text="Test connection", icon=ft.icons.POWER, on_click=validate_source),
+                                ft.ElevatedButton(text="Upload dataset", icon=ft.icons.UPLOAD_SHARP, on_click=lambda e: pick_files_dialog.pick_files(dialog_title="Select DuckDB file"))]),
                         page.nav_bar
                     ],
                     scroll=ft.ScrollMode.AUTO
