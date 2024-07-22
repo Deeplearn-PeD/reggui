@@ -27,6 +27,7 @@ def build_app_bar(page: ft.Page):
         page.client_storage.set("table", e.control.value)
         page.chat_history.value += f"***Reg:*** You have selected the table: {e.control.value}\n\n"
         page.chat_history.value += f"***Reg:*** What would you like to know about this table?\n\n"
+        page.user_input.disabled = False
         page.update()
 
     appbar = ft.AppBar(
@@ -196,6 +197,7 @@ async def main(page: ft.Page):
     )
     page.user_input = ft.TextField(label="Type your message here...",
                                    on_submit=handle_submit,
+                                   disabled=True,
                                    expand=True
                                    )
 
