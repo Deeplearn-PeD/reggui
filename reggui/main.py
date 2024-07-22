@@ -217,6 +217,16 @@ async def main(page: ft.Page):
 
     def pick_files_result(e: ft.FilePickerResultEvent):
         files = e.files
+        upload_list = []
+        if files:
+            for f in files:
+                upload_list.append(
+                    ft.FilePickerUploadFile(
+                        f.name,
+                        upload_url=page.get_upload_url(f.name, 600),
+                    )
+                )
+        pick_files_dialog.upload(upload_list)
 
     pick_files_dialog = ft.FilePicker(on_result=pick_files_result)
 
@@ -298,11 +308,16 @@ app = ft.app(
     target=main,
     export_asgi_app=True,
     assets_dir="assets",
+    upload_dir="data"
 )
 
 
 def run():
-    ft.app(target=main, assets_dir="assets")
+    ft.app(
+        target=main,
+        assets_dir="assets",
+        upload_dir="data"
+    )
 
 
 if __name__ == "__main__":
