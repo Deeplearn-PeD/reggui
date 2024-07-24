@@ -156,7 +156,7 @@ Reggie is designed by [Deeplearn](www.deeplearn.ltd) to be easy to use and flexi
                                           )]),
                 ft.Column(col=6,
                           controls=[
-                              ft.Image(src="/images/reggie.png", fit=ft.ImageFit.CONTAIN)
+                              ft.Image(src="/images/reggie.webp", fit=ft.ImageFit.CONTAIN)
                           ])]
         ),
         padding=20
@@ -170,7 +170,7 @@ async def start_reg(page):
 
 async def main(page: ft.Page):
     page.title = "Reg D. Bot"
-    page.theme = ft.Theme(color_scheme_seed="green")
+    page.theme = ft.Theme(color_scheme_seed="black")
     page.appbar = build_app_bar(page)
     page.prog_ring = ft.ProgressRing(value=None, visible=False)
     build_navigation_bar(page)
@@ -211,7 +211,7 @@ async def main(page: ft.Page):
         content=ft.Container(
             content=ft.Column(
                 [
-                    ft.Image(src="/images/reggie.png", width=200, height=200, fit=ft.ImageFit.CONTAIN),
+                    ft.Image(src="/images/reggie.webp", width=200, height=200, fit=ft.ImageFit.CONTAIN),
                     ft.Text("Reggie D. Bot", size=20, weight=ft.FontWeight.BOLD),
                     ft.Text("Database AI Expert", size=16, weight=ft.FontWeight.NORMAL),
                 ],
