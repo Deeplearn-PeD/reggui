@@ -11,7 +11,7 @@ def run_eda(event, page):
     Run the EDA analysis.
     :param event: the event object
     """
-    print("Running EDA")
+    # print("Running EDA")
     page.pr_eda.value = None
     page.appbar.actions[0].value = page.client_storage.get("dburl")
     page.RDB.bot.load_database(page.client_storage.get("dburl"))
@@ -19,12 +19,15 @@ def run_eda(event, page):
         table = page.client_storage.get("table")
         df = page.RDB.bot.active_db.get_table_df(table)
         page.eda = EDA(df)
-        page.eda_panel.content.controls[0].controls.append(build_cat_dropdown(page))
         page.eda_results.value += "## Descriptive Statistics for numeric columns\n\n"
         page.eda_results.value += page.eda.describe().to_markdown()
         page.eda_results.visible = True
-        page.plot_corr_button.disabled = False
-        page.show_categorical_button.disabled = False
+        if len(page.eda.numerical_columns) > 1:
+            page.plot_corr_button.disabled = False
+        if len(page.eda.categorical_columns) > 0:
+            page.eda_panel.content.controls[0].controls.append(build_cat_dropdown(page))
+            page.show_categorical_button.disabled = False
+
         page.pr_eda.value = 100
         page.update()
 
@@ -53,16 +56,18 @@ def show_categorical(event, page):
     page.eda_results.value += "\n\n" + df.iloc[:20].to_markdown()
     page.update()
 
+
 def build_cat_dropdown(page: ft.Page):
     cats = page.eda.categorical_columns
     page.cat_list = ft.Dropdown(
         label="Categorical Columns",
-        value=cats[0],
-        key=cats[0],
+        value="" if len(cats) == 0 else cats[0],
+        data="" if len(cats) == 0 else cats[0],
         options=[ft.dropdown.Option(text=col, key=col) for col in cats],
         tooltip="Select a column to show the categorical data."
     )
     return page.cat_list
+
 
 def build_eda_panel(page: ft.Page):
     """
@@ -127,6 +132,6 @@ def build_eda_panel(page: ft.Page):
             ],
             # expand=True
         ),
-    expand = True,
+        expand=True,
     )
     return page.eda_panel

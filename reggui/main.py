@@ -63,6 +63,7 @@ def build_app_bar(page: ft.Page):
                     ft.dropdown.Option(text="English", key="en_US"),
                     ft.dropdown.Option(text="Portuguese", key="pt_BR"),
                 ],
+                disabled=True,
                 on_change=lambda event: set_language(event)
 
             ),
@@ -90,6 +91,10 @@ def build_settings_page(page: ft.Page):
             page.eda_results.value = ""
             page.plot_corr_button.disabled = True
             page.show_categorical_button.disabled = True
+            try:
+                page.cat_list.visible = False
+            except AttributeError:
+                pass
         else:
             page.client_storage.set("table", "")
         page.update()
@@ -105,11 +110,12 @@ def build_settings_page(page: ft.Page):
                                 ft.Text("Data Source Configuration", size=28, weight=ft.FontWeight.BOLD),
                                 ft.Dropdown(
                                     label="Database",
-                                    value="postgresql://",
+                                    value="",
                                     options=[
                                         # ft.dropdown.Option(text="regdbot", key=os.environ.get("PGURL")),
                                         ft.dropdown.Option(text="netflix_titles", key=os.environ.get("DUCKURL")),
                                         ft.dropdown.Option(text="Open Access Journals", key=os.environ.get("DUCKURL2")),
+                                        ft.dropdown.Option(text="California Housing", key="duckdb://reggui/data/cal_housing.db"),
                                     ],
                                     on_change=on_dataset_selection
                                 ),

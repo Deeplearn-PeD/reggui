@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "reggui"
-version = "0.3.5"
+version = "0.4.0"
 description = "Flet-based GUI for Reggie D. Bot"
 authors = ["Flavio Codeço Coelho <fccoelho@gmail.com>"]
 license = "GPL-v3"
@@ -20,6 +20,7 @@ hypercorn = "^0.17.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
+scikit-learn = "^1.5.1"
 
 [build-system]
 requires = ["poetry-core"]
