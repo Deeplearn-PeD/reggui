@@ -279,7 +279,7 @@ async def main(page: ft.Page):
                         page.appbar,
                         build_settings_page(page),
                         ft.Row([ft.ElevatedButton(text="Test connection", icon=ft.icons.POWER, on_click=validate_source),
-                                ft.ElevatedButton(text="Upload dataset", icon=ft.icons.UPLOAD_SHARP, on_click=lambda e: pick_files_dialog.pick_files(dialog_title="Select DuckDB file"))]),
+                                ft.ElevatedButton(text="Upload dataset", icon=ft.icons.UPLOAD_SHARP, disabled=True, on_click=lambda e: pick_files_dialog.pick_files(dialog_title="Select DuckDB file"))]),
                         page.nav_bar
                     ],
                     scroll=ft.ScrollMode.AUTO
