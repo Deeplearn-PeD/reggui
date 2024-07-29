@@ -25,8 +25,8 @@ def build_app_bar(page: ft.Page):
 
     def set_table(e):
         page.client_storage.set("table", e.control.value)
-        page.chat_history.value += f"***Reg:*** You have selected the table: {e.control.value}\n\n"
-        page.chat_history.value += f"***Reg:*** What would you like to know about this table?\n\n"
+        page.chat_history.controls[0].value += f"***Reg:*** You have selected the table: {e.control.value}\n\n"
+        page.chat_history.controls[0].value += f"***Reg:*** What would you like to know about this table?\n\n"
         page.user_input.disabled = False
         page.update()
 
@@ -115,7 +115,8 @@ def build_settings_page(page: ft.Page):
                                         # ft.dropdown.Option(text="regdbot", key=os.environ.get("PGURL")),
                                         ft.dropdown.Option(text="netflix_titles", key=os.environ.get("DUCKURL")),
                                         ft.dropdown.Option(text="Open Access Journals", key=os.environ.get("DUCKURL2")),
-                                        ft.dropdown.Option(text="California Housing", key="duckdb://reggui/data/cal_housing.db"),
+                                        ft.dropdown.Option(text="California Housing",
+                                                           key="duckdb://reggui/data/cal_housing.db"),
                                     ],
                                     on_change=on_dataset_selection
                                 ),
@@ -180,7 +181,7 @@ async def main(page: ft.Page):
     def handle_submit(event):
         page.prog_ring.visible = True
         user_message = page.user_input.value
-        page.chat_history.value += f"User: {user_message}\n\n"
+        page.chat_history.controls[0].value += f"User: {user_message}\n\n"
         page.user_input.value = ""
         page.prog_ring.value = None
         page.update()
@@ -188,18 +189,23 @@ async def main(page: ft.Page):
         response = page.RDB.ask(user_message, page.client_storage.get("table"))
         page.prog_ring.value = 100
         ai_response = f"***Reg:*** {response}\n\n"
-        page.chat_history.value += ai_response
+        page.chat_history.controls[0].value += ai_response
         page.prog_ring.visible = False
 
         page.update()
 
-    page.chat_history = ft.Markdown(
-        value="Hi! I am *Reggie D. Bot*, your friendly database AI expert. How can I help you today?\n\n",
-        selectable=True,
-        expand=False,
-        extension_set="gitHubWeb",
-        code_theme="atom-one-dark",
-        code_style=ft.TextStyle(font_family="Roboto Mono")
+    page.chat_history = ft.Column(
+        [
+            ft.Markdown(
+                value="Hi! I am *Reggie D. Bot*, your friendly database AI expert. How can I help you today?\n\n",
+                selectable=True,
+                expand=False,
+                extension_set="gitHubWeb",
+                code_theme="atom-one-dark",
+                code_style=ft.TextStyle(font_family="Roboto Mono")
+            )
+        ],
+        scroll=ft.ScrollMode.ALWAYS,
     )
     page.user_input = ft.TextField(label="Type your message here...",
                                    on_submit=handle_submit,
@@ -208,6 +214,7 @@ async def main(page: ft.Page):
                                    )
 
     mugshot = ft.Card(
+        col=2.5,
         content=ft.Container(
             content=ft.Column(
                 [
@@ -221,7 +228,6 @@ async def main(page: ft.Page):
             padding=10,
         )
     )
-
 
     def pick_files_result(e: ft.FilePickerResultEvent):
         files = e.files
@@ -241,10 +247,12 @@ async def main(page: ft.Page):
     page.overlay.append(pick_files_dialog)
 
     def validate_source(e):
-        page.chat_history.value += f"***Reg:*** Database loaded: {page.client_storage.get('dburl')}\n\n"
+        page.chat_history.controls[0].value += f"***Reg:*** Database loaded: {page.client_storage.get('dburl')}\n\n"
         tlist = '\n'.join([f"- {t}\n" for t in page.RDB.bot.active_db.tables])
-        page.chat_history.value += f"***Reg:*** These are the tables available in this database: \n{tlist}\n\n"
-        page.chat_history.value += f"***Reg:*** Why don't you select one of these in the pull down menu above so we can explore it together?\n\n"
+        page.chat_history.controls[
+            0].value += f"***Reg:*** These are the tables available in this database: \n{tlist}\n\n"
+        page.chat_history.controls[
+            0].value += f"***Reg:*** Why don't you select one of these in the pull down menu above so we can explore it together?\n\n"
         page.go("/home")
         page.update()
 
@@ -256,19 +264,26 @@ async def main(page: ft.Page):
                 "/home",
                 [
                     page.appbar,
-                    ft.Column(
+                    ft.ResponsiveRow(
                         [
                             mugshot,
-                            page.chat_history,
-                            ft.Row([page.user_input, page.prog_ring])
-                        ],
-                        alignment=ft.MainAxisAlignment.END,
-                        spacing=40
+                            ft.Column(col=9.5,
+                            controls=[
+                                page.chat_history,
+                                ft.Row([page.user_input, page.prog_ring]),
+                            ],
+                                      alignment=ft.MainAxisAlignment.START,
+                                      spacing=40,
+                                      height = 600,
+                                      expand=True,
+                                      # auto_scroll=True,
+                                      scroll=ft.ScrollMode.ALWAYS
+                                      )
+                        ]
                     ),
                     page.nav_bar
                 ],
-                scroll=ft.ScrollMode.AUTO,
-
+                # scroll=ft.ScrollMode.AUTO,
             )
         )
         if page.route == "/settings":
@@ -278,8 +293,11 @@ async def main(page: ft.Page):
                     [
                         page.appbar,
                         build_settings_page(page),
-                        ft.Row([ft.ElevatedButton(text="Test connection", icon=ft.icons.POWER, on_click=validate_source),
-                                ft.ElevatedButton(text="Upload dataset", icon=ft.icons.UPLOAD_SHARP, disabled=True, on_click=lambda e: pick_files_dialog.pick_files(dialog_title="Select DuckDB file"))]),
+                        ft.Row(
+                            [ft.ElevatedButton(text="Test connection", icon=ft.icons.POWER, on_click=validate_source),
+                             ft.ElevatedButton(text="Upload dataset", icon=ft.icons.UPLOAD_SHARP, disabled=True,
+                                               on_click=lambda e: pick_files_dialog.pick_files(
+                                                   dialog_title="Select DuckDB file"))]),
                         page.nav_bar
                     ],
                     scroll=ft.ScrollMode.AUTO

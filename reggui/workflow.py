@@ -3,7 +3,7 @@ from regdbot.brain.utils import extract_code_from_markdown
 
 class Reggie:
     def __init__(self, model='gpt', language: str = "en_US"):
-        self.bot = RegDBot(model=model)
+        self.bot = RegDBot(model=model, memory_db_url='sqlite:///memory.sqlite')
         self.bot.set_language(language)
         self.bot.ask(self.bot.context, None)
         # self.bot.set_context()
