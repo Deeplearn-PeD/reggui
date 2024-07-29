@@ -13,6 +13,7 @@ def build_navigation_bar(page: ft.Page):
         destinations=[
             ft.NavigationDestination(icon=ft.icons.HOME, label="Home"),
             ft.NavigationDestination(icon=ft.icons.SETTINGS, label="Settings"),
+            ft.NavigationDestination(icon=ft.icons.LIST, label="Log", tooltip="log of questions and answers"),
             ft.NavigationDestination(icon=ft.icons.INFO, label="About"),
         ],
         on_change=lambda e: page.go('/' + e.control.destinations[e.control.selected_index].label.lower())
@@ -67,8 +68,8 @@ def build_app_bar(page: ft.Page):
                 on_change=lambda event: set_language(event)
 
             ),
-            ft.IconButton(icon=ft.icons.NOTIFICATIONS),
-            ft.IconButton(icon=ft.icons.ACCOUNT_CIRCLE),
+            # ft.IconButton(icon=ft.icons.NOTIFICATIONS),
+            # ft.IconButton(icon=ft.icons.ACCOUNT_CIRCLE),
         ],
     )
     return appbar
@@ -133,6 +134,55 @@ def build_settings_page(page: ft.Page):
     return page.settings_form
 
 
+def build_chat_log(page: ft.Page):
+    page.chat_log = ft.Card(
+        content=ft.Container(
+            content=ft.Column(
+                controls=[
+                ],
+                scroll=ft.ScrollMode.ALWAYS,
+            )))
+    return page.chat_log
+
+
+def add_log_entry(page: ft.Page, entry: dict):
+    page.chat_log.content.content.controls.append(
+        ft.Card(
+            content=ft.Container(
+                ft.Column(
+                    [
+                        ft.ListTile(
+                            leading=ft.Icon(ft.icons.PERSON),
+                            title=ft.Text(entry.question),
+                            subtitle=ft.Text(entry.timestamp),
+                        ),
+                        ft.Markdown(
+                            value=f"```sql\n{entry.code}\n```",
+                            selectable=True,
+                            expand=False,
+                            extension_set="gitHubWeb",
+                            code_theme="atom-one-dark",
+                            code_style=ft.TextStyle(font_family="Roboto Mono")
+                        ),
+                        ft.Text(entry.explanation),
+                        ft.Row(
+                            [
+                                ft.ElevatedButton(text="Run query", tooltip="Run the query and export it as CSV", disabled=True, icon=ft.icons.PLAY_ARROW, on_click=lambda e: None),
+                            ],
+                            spacing=10
+                        )
+
+                    ],
+                    spacing=10
+                )
+            ),
+            margin=ft.margin.symmetric(vertical=5),
+            elevation=2,
+        )
+    )
+    page.update()
+
+
 def build_about_page(page):
     about_page = ft.Container(
         content=ft.ResponsiveRow(
@@ -175,6 +225,7 @@ async def main(page: ft.Page):
     page.appbar = build_app_bar(page)
     page.prog_ring = ft.ProgressRing(value=None, visible=False)
     build_navigation_bar(page)
+    build_chat_log(page)
     page.update()
     await start_reg(page)
 
@@ -189,6 +240,8 @@ async def main(page: ft.Page):
         response = page.RDB.ask(user_message, page.client_storage.get("table"))
         page.prog_ring.value = 100
         ai_response = f"***Reg:*** {response}\n\n"
+        log_entry = page.RDB.bot.chat_history.recall(page.RDB.bot.session_id)
+        add_log_entry(page, log_entry[-1])
         page.chat_history.controls[0].value += ai_response
         page.prog_ring.visible = False
 
@@ -268,13 +321,13 @@ async def main(page: ft.Page):
                         [
                             mugshot,
                             ft.Column(col=9.5,
-                            controls=[
-                                page.chat_history,
-                                ft.Row([page.user_input, page.prog_ring]),
-                            ],
+                                      controls=[
+                                          page.chat_history,
+                                          ft.Row([page.user_input, page.prog_ring]),
+                                      ],
                                       alignment=ft.MainAxisAlignment.START,
                                       spacing=40,
-                                      height = 600,
+                                      height=600,
                                       expand=True,
                                       # auto_scroll=True,
                                       scroll=ft.ScrollMode.ALWAYS
@@ -298,6 +351,18 @@ async def main(page: ft.Page):
                              ft.ElevatedButton(text="Upload dataset", icon=ft.icons.UPLOAD_SHARP, disabled=True,
                                                on_click=lambda e: pick_files_dialog.pick_files(
                                                    dialog_title="Select DuckDB file"))]),
+                        page.nav_bar
+                    ],
+                    scroll=ft.ScrollMode.AUTO
+                )
+            )
+        elif page.route == "/log":
+            page.views.append(
+                ft.View(
+                    "/log",
+                    [
+                        page.appbar,
+                        page.chat_log,
                         page.nav_bar
                     ],
                     scroll=ft.ScrollMode.AUTO
