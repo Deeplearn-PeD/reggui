@@ -331,7 +331,7 @@ async def main(page: ft.Page):
                                       ],
                                       alignment=ft.MainAxisAlignment.START,
                                       spacing=40,
-                                      height=page.window_height-200,
+                                      height=page.height-200 if page.web else page.window_height-200, #window attibutes are only available for desktop apps
                                       expand=True,
                                       # auto_scroll=True,
                                       scroll=ft.ScrollMode.ALWAYS
