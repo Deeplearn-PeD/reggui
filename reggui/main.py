@@ -331,7 +331,7 @@ async def main(page: ft.Page):
                                       ],
                                       alignment=ft.MainAxisAlignment.START,
                                       spacing=40,
-                                      height=page.window_height,
+                                      height=page.window_height-200,
                                       expand=True,
                                       # auto_scroll=True,
                                       scroll=ft.ScrollMode.ALWAYS
