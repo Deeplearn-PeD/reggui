@@ -12,7 +12,7 @@ def build_navigation_bar(page: ft.Page):
     page.nav_bar = ft.NavigationBar(
         destinations=[
             ft.NavigationDestination(icon=ft.icons.HOME, label="Home"),
-            ft.NavigationDestination(icon=ft.icons.SETTINGS, label="Settings"),
+            ft.NavigationDestination(icon=ft.icons.SETTINGS, label="Settings", tooltip="Click to select a dataset"),
             ft.NavigationDestination(icon=ft.icons.LIST, label="Log", tooltip="log of questions and answers"),
             ft.NavigationDestination(icon=ft.icons.INFO, label="About"),
         ],
@@ -141,7 +141,10 @@ def build_chat_log(page: ft.Page):
                 controls=[
                 ],
                 scroll=ft.ScrollMode.ALWAYS,
-            )))
+                expand=True,
+            )
+        )
+    )
     return page.chat_log
 
 
@@ -167,7 +170,8 @@ def add_log_entry(page: ft.Page, entry: dict):
                         ft.Text(entry.explanation),
                         ft.Row(
                             [
-                                ft.ElevatedButton(text="Run query", tooltip="Run the query and export it as CSV", disabled=True, icon=ft.icons.PLAY_ARROW, on_click=lambda e: None),
+                                ft.ElevatedButton(text="Run query", tooltip="Run the query and export it as CSV",
+                                                  disabled=True, icon=ft.icons.PLAY_ARROW, on_click=lambda e: None),
                             ],
                             spacing=10
                         )
@@ -244,13 +248,13 @@ async def main(page: ft.Page):
         add_log_entry(page, log_entry[-1])
         page.chat_history.controls[0].value += ai_response
         page.prog_ring.visible = False
-
+        page.go("/home")
         page.update()
 
     page.chat_history = ft.Column(
         [
             ft.Markdown(
-                value="Hi! I am *Reggie D. Bot*, your friendly database AI expert. How can I help you today?\n\n",
+                value="Hi! I am *Reggie D. Bot*, your friendly database AI expert. Please select a dataset for us to analyze!\n\n",
                 selectable=True,
                 expand=False,
                 extension_set="gitHubWeb",
@@ -327,7 +331,7 @@ async def main(page: ft.Page):
                                       ],
                                       alignment=ft.MainAxisAlignment.START,
                                       spacing=40,
-                                      height=600,
+                                      height=page.window_height,
                                       expand=True,
                                       # auto_scroll=True,
                                       scroll=ft.ScrollMode.ALWAYS
