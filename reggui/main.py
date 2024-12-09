@@ -114,8 +114,8 @@ def build_settings_page(page: ft.Page):
                                     value="",
                                     options=[
                                         # ft.dropdown.Option(text="regdbot", key=os.environ.get("PGURL")),
-                                        ft.dropdown.Option(text="netflix_titles", key=os.environ.get("DUCKURL")),
-                                        ft.dropdown.Option(text="Open Access Journals", key=os.environ.get("DUCKURL2")),
+                                        ft.dropdown.Option(text="netflix_titles", key="duckdb://reggui/data/netflix_titles.db"),
+                                        ft.dropdown.Option(text="Open Access Journals", key="duckdb://reggui/data/doaj.db"),
                                         ft.dropdown.Option(text="California Housing",
                                                            key="duckdb://reggui/data/cal_housing.db"),
                                     ],
