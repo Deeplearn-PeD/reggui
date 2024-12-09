@@ -11,10 +11,10 @@ dotenv.load_dotenv()
 def build_navigation_bar(page: ft.Page):
     page.nav_bar = ft.NavigationBar(
         destinations=[
-            ft.NavigationDestination(icon=ft.icons.HOME, label="Home"),
-            ft.NavigationDestination(icon=ft.icons.SETTINGS, label="Settings", tooltip="Click to select a dataset"),
-            ft.NavigationDestination(icon=ft.icons.LIST, label="Log", tooltip="log of questions and answers"),
-            ft.NavigationDestination(icon=ft.icons.INFO, label="About"),
+            ft.NavigationDestination(icon=ft.Icons.HOME, label="Home"),
+            ft.NavigationDestination(icon=ft.Icons.SETTINGS, label="Settings", tooltip="Click to select a dataset"),
+            ft.NavigationDestination(icon=ft.Icons.LIST, label="Log", tooltip="log of questions and answers"),
+            ft.NavigationDestination(icon=ft.Icons.INFO, label="About"),
         ],
         on_change=lambda e: page.go('/' + e.control.destinations[e.control.selected_index].label.lower())
     )
@@ -331,7 +331,7 @@ async def main(page: ft.Page):
                                       ],
                                       alignment=ft.MainAxisAlignment.START,
                                       spacing=40,
-                                      height=page.height-200 if page.web else page.window_height-200, #window attibutes are only available for desktop apps
+                                      height=page.height-200 if page.web else page.window.height-200, #window attibutes are only available for desktop apps
                                       expand=True,
                                       # auto_scroll=True,
                                       scroll=ft.ScrollMode.ALWAYS
@@ -351,8 +351,8 @@ async def main(page: ft.Page):
                         page.appbar,
                         build_settings_page(page),
                         ft.Row(
-                            [ft.ElevatedButton(text="Test connection", icon=ft.icons.POWER, on_click=validate_source),
-                             ft.ElevatedButton(text="Upload dataset", icon=ft.icons.UPLOAD_SHARP, disabled=True,
+                            [ft.ElevatedButton(text="Test connection", icon=ft.Icons.POWER, on_click=validate_source),
+                             ft.ElevatedButton(text="Upload dataset", icon=ft.Icons.UPLOAD_SHARP, disabled=True,
                                                on_click=lambda e: pick_files_dialog.pick_files(
                                                    dialog_title="Select DuckDB file"))]),
                         page.nav_bar
