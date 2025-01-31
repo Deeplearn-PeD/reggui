@@ -19,8 +19,8 @@ def run_eda(event, page):
         table = page.client_storage.get("table")
         df = page.RDB.bot.active_db.get_table_df(table)
         page.eda = EDA(df)
-        page.eda_results.value += "## Descriptive Statistics for numeric columns\n\n"
-        page.eda_results.value += page.eda.describe().to_markdown()
+        page.eda_results.value += "## Descriptive Statistics for numerical columns\n\n"
+        page.eda_results.value += page.eda.numerical.to_markdown()
         page.eda_results.visible = True
         if len(page.eda.numerical_columns) > 1:
             page.plot_corr_button.disabled = False

@@ -32,11 +32,11 @@ def build_app_bar(page: ft.Page):
         page.update()
 
     appbar = ft.AppBar(
-        leading=ft.Icon(ft.Icons.DATASET),
+        leading=ft.Icon(ft.icons.DATASET),
         leading_width=40,
         title=ft.Text("Reg D. Bot"),
         center_title=False,
-        bgcolor=ft.Colors.OUTLINE_VARIANT,
+        bgcolor=ft.colors.SURFACE_VARIANT,
         adaptive=True,
         toolbar_height=80,
         actions=[
@@ -68,8 +68,8 @@ def build_app_bar(page: ft.Page):
                 on_change=lambda event: set_language(event)
 
             ),
-            # ft.IconButton(icon=ft.Icons.NOTIFICATIONS),
-            # ft.IconButton(icon=ft.Icons.ACCOUNT_CIRCLE),
+            # ft.IconButton(icon=ft.icons.NOTIFICATIONS),
+            # ft.IconButton(icon=ft.icons.ACCOUNT_CIRCLE),
         ],
     )
     return appbar
@@ -155,7 +155,7 @@ def add_log_entry(page: ft.Page, entry: dict):
                 ft.Column(
                     [
                         ft.ListTile(
-                            leading=ft.Icon(ft.Icons.PERSON),
+                            leading=ft.Icon(ft.icons.PERSON),
                             title=ft.Text(entry.question),
                             subtitle=ft.Text(entry.timestamp),
                         ),
@@ -171,7 +171,7 @@ def add_log_entry(page: ft.Page, entry: dict):
                         ft.Row(
                             [
                                 ft.ElevatedButton(text="Run query", tooltip="Run the query and export it as CSV",
-                                                  disabled=True, icon=ft.Icons.PLAY_ARROW, on_click=lambda e: None),
+                                                  disabled=True, icon=ft.icons.PLAY_ARROW, on_click=lambda e: None),
                             ],
                             spacing=10
                         )
@@ -331,7 +331,7 @@ async def main(page: ft.Page):
                                       ],
                                       alignment=ft.MainAxisAlignment.START,
                                       spacing=40,
-                                      height=page.height-200 if page.web else page.height-200, #window attibutes are only available for desktop apps
+                                      height=page.height-200 if page.web else page.window_height-200, #window attibutes are only available for desktop apps
                                       expand=True,
                                       # auto_scroll=True,
                                       scroll=ft.ScrollMode.ALWAYS
@@ -351,8 +351,8 @@ async def main(page: ft.Page):
                         page.appbar,
                         build_settings_page(page),
                         ft.Row(
-                            [ft.ElevatedButton(text="Test connection", icon=ft.Icons.POWER, on_click=validate_source),
-                             ft.ElevatedButton(text="Upload dataset", icon=ft.Icons.UPLOAD_SHARP, disabled=True,
+                            [ft.ElevatedButton(text="Test connection", icon=ft.icons.POWER, on_click=validate_source),
+                             ft.ElevatedButton(text="Upload dataset", icon=ft.icons.UPLOAD_SHARP, disabled=True,
                                                on_click=lambda e: pick_files_dialog.pick_files(
                                                    dialog_title="Select DuckDB file"))]),
                         page.nav_bar
