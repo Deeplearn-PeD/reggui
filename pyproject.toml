@@ -10,8 +10,8 @@ readme = "README.md"
 reggui = "reggui.main:run"
 
 [tool.poetry.dependencies]
-python = "^3.11"
-flet = "^0.22.1"
+python = ">3.11,<3.13"
+flet = "^0.26.0"
 sqlmodel = "^0.0.21"
 reg-d-bot = {git = "https://github.com/Deeplearn-PeD/reg"}
 python-dotenv = "^1.0.1"
@@ -22,6 +22,7 @@ hypercorn = "^0.17.3"
 pytest = "*"
 scikit-learn = "^1.5.1"
 playwright = "^1.45.1"
+aider-chat = "^0.72.3"
 
 [build-system]
 requires = ["poetry-core"]

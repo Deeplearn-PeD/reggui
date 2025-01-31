@@ -1,4 +1,4 @@
-FROM ubuntu:23.04
+FROM ubuntu:24.04
 
 ENV POETRY_HOME="/opt/poetry" \
     POETRY_VIRTUALENVS_IN_PROJECT=1 \
@@ -26,6 +26,7 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 
 COPY pyproject.toml .
 COPY poetry.lock .
+COPY README.md .
 COPY reggui /reggui/
 COPY ./Docker/poetry_install.sh /scripts/poetry_install.sh
 COPY ./Docker/entrypoint.sh /scripts/entrypoint.sh
