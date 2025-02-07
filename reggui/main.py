@@ -32,11 +32,11 @@ def build_app_bar(page: ft.Page):
         page.update()
 
     appbar = ft.AppBar(
-        leading=ft.Icon(ft.icons.DATASET),
+        leading=ft.Icon(ft.Icons.DATASET),
         leading_width=40,
         title=ft.Text("Reg D. Bot"),
         center_title=False,
-        bgcolor=ft.colors.SURFACE_VARIANT,
+        bgcolor=ft.Colors.ON_TERTIARY,
         adaptive=True,
         toolbar_height=80,
         actions=[
@@ -225,7 +225,7 @@ async def start_reg(page):
 
 async def main(page: ft.Page):
     page.title = "Reg D. Bot"
-    page.theme = ft.Theme(color_scheme_seed="black")
+    page.theme = ft.Theme(color_scheme_seed=ft.Colors.BLUE)
     page.appbar = build_app_bar(page)
     page.prog_ring = ft.ProgressRing(value=None, visible=False)
     build_navigation_bar(page)
@@ -331,7 +331,7 @@ async def main(page: ft.Page):
                                       ],
                                       alignment=ft.MainAxisAlignment.START,
                                       spacing=40,
-                                      height=page.height-200 if page.web else page.window_height-200, #window attibutes are only available for desktop apps
+                                      height=page.height-200 if page.web else page.height-200, #window attibutes are only available for desktop apps
                                       expand=True,
                                       # auto_scroll=True,
                                       scroll=ft.ScrollMode.ALWAYS
